@@ -224,4 +224,29 @@ library(lattice)
 data(singer, package = "lattice")
 qplot(height, data=singer,geom=c("density"), 
       facets = voice.part~., fill=voice.part)
+###############################################################################
+#                                                                             #
+# bb$V1 <-gsub(" \\(.*", "", bb$V2)                                           #
+#                                                                             #
+#plot()                                                                       #
+###############################################################################
 
+
+png('rplot.png')
+##we can use the ggplots：
+p <- plot(bb$trtname,bb$V2,col=1,type="b",xlab = "5 Levels of Effects",ylab ="Different treatments",xlim=c(0,15),ylim=c(-4.0,-1.20))
+lines(trt,bb$V3,col=2,type="b")
+
+lines(trt,bb$V4,col=3,type="b")
+lines(trt,bb$V5,col=4,type="b")
+
+lines(trt,bb$V6,col=5,type="b")
+lines(trt,bb$V7,col=6,type="b")
+lines(trt,bb$V8,col=7,type="b")
+lines(trt,bb$V9,col=8,type="b")
+
+legend('bottomleft',pch=c(15,15),legend=c("Galcanezumab 240mg","Galcanezumab 120mg","OnabotulinumtoxinA 155U",
+                                        "Erenumab 70mg","Erenumab 140mg","Fremanezumab 675mg Q12W","Eptinezumab 100mg","Eptinezumab 300mg"),
+       col=c(1,2,3,4,5,6,7,8),bty="n",cex = 0.7)
+
+dev.off()
