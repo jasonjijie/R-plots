@@ -224,29 +224,70 @@ library(lattice)
 data(singer, package = "lattice")
 qplot(height, data=singer,geom=c("density"), 
       facets = voice.part~., fill=voice.part)
+
+
+
+
+
+
+
+
+
 ###############################################################################
 #                                                                             #
 # bb$V1 <-gsub(" \\(.*", "", bb$V2)                                           #
 #                                                                             #
 #plot()                                                                       #
 ###############################################################################
+install.packages("read_excel")
+library(readxl)
+setwd("C:/Users/JIJIE.XU/Desktop/xxx")
+getwd()
+###Now we will make the matrix:
+df_0.1 <- read_excel("xxx.xlsx", sheet = "Pred pbo", col_names = TRUE)
+df_0.25 <- read_excel("xxx.xlsx", sheet = "Pred pbo", col_names = TRUE)
+df_0.5 <- read_excel("xxx.xlsx", sheet = "Pred pbo", col_names = TRUE)
+df_1<- read_excel("xxx.xlsx", sheet="Pred pbo", col_names = TRUE)
+df_5 <- read_excel("xxx.xlsx", sheet = "Pred pbo", col_names = TRUE)
+df_10 <- read_excel("xxx.xlsx", sheet = "Pred pbo", col_names = TRUE)
+df_15 <- read_excel("xxx.xlsx", sheet = "Pred pbo", col_names = TRUE)  
+df_25 <- read_excel("xxx.xlsx", sheet = "Pred pbo", col_names = TRUE) 
+df_50 <- read_excel("xxx.xlsx", sheet = "Pred pbo", col_names = TRUE)
 
 
-png('rplot.png')
-##we can use the ggplots：
-p <- plot(bb$trtname,bb$V2,col=1,type="b",xlab = "5 Levels of Effects",ylab ="Different treatments",xlim=c(0,15),ylim=c(-4.0,-1.20))
-lines(trt,bb$V3,col=2,type="b")
+df <- cbind(df_0.1,df_0.25,df_0.5,df_1,df_5,df_10,df_15,df_25,df_50)
 
-lines(trt,bb$V4,col=3,type="b")
-lines(trt,bb$V5,col=4,type="b")
+df1 <- df[,c("Predicted_0.1","Predicted_0.25","Predicted_0.5","Predicted_1","Predicted_5","Predicted_10","Predicted_15","Predicted_25","Predicted_50")]
+trt <- c(0.1,0.25,0.5,1.0,5.0,10.0,15.0,25,50)
+a <- rbind(trt,df1)
+b <- t(a)
 
-lines(trt,bb$V6,col=5,type="b")
-lines(trt,bb$V7,col=6,type="b")
-lines(trt,bb$V8,col=7,type="b")
-lines(trt,bb$V9,col=8,type="b")
+bb <- as.data.frame(b)
 
-legend('bottomleft',pch=c(15,15),legend=c("Galcanezumab 240mg","Galcanezumab 120mg","OnabotulinumtoxinA 155U",
-                                        "Erenumab 70mg","Erenumab 140mg","Fremanezumab 675mg Q12W","Eptinezumab 100mg","Eptinezumab 300mg"),
-       col=c(1,2,3,4,5,6,7,8),bty="n",cex = 0.7)
+bb$V8 <- as.numeric(gsub(" \\(.*", "",bb$V2))
+
+
+bb$V2 <-as.numeric(gsub(" \\(.*", "", bb$V2))
+bb$V3 <-as.numeric(gsub(" \\(.*", "", bb$V3))
+bb$V4 <-as.numeric(gsub(" \\(.*", "", bb$V4))
+bb$V5 <-as.numeric(gsub(" \\(.*", "", bb$V5))
+bb$V6 <-as.numeric(gsub(" \\(.*", "", bb$V6))
+bb <- bb[,-3]
+
+
+
+
+pdf('rplot2.pdf')
+##we can use the ggplots:
+p <- plot(trt,bb$V2,col=1,type="b",xlab = "Scaling factor for variance",ylab ="Placebo effects",
+          xlim=c(0,50),ylim=c(-6.1,0.5))
+
+lines(trt,bb$V4,col=2,type="b")
+
+lines(trt,bb$V5,col=3,type="b")
+lines(trt,bb$V6,col=4,type="b")
+
+legend('bottomright',pch=c(15,15),legend=c("No treatment","Subcutaneous","Intramuscular","Intravenous"),
+       col=c(1,2,3,4),bty="n",cex = 0.7)
 
 dev.off()
